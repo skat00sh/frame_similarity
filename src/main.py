@@ -12,7 +12,16 @@ from utils import check_none_img, get_cmpr_pairs_list
 
 
 
-def calculate_similarity_scores(cmpr_pairs):
+def calculate_similarity_scores(cmpr_pairs: list) -> tuple:
+    """Calculates similarity scores and path of duplicate frame to be deleted
+
+    Args:
+        cmpr_pairs (list): (prev and next frame parh)
+
+    Returns:
+        tuple: score from frame comparison and path of duplicate frame to be removed
+    """
+    
     SCORE_THRESHOLD = conf.default_config['score_threshold']
     duplicate_frame = []
     
@@ -29,7 +38,13 @@ def calculate_similarity_scores(cmpr_pairs):
 
       
 
-def find_similars_all(data_dir):
+def find_similars_all(data_dir: str) -> None:
+    """Finds similar frames and removes from the dir
+
+    Args:
+        data_dir (str): 
+    """
+    
     print("Finding similar images...\n")
     results = []
     scores = []
