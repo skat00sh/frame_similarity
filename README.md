@@ -53,4 +53,50 @@ pip install -r requirements.txt
 ```
 
 ## Answers to Questions asked
+Please answer following questions:
+- What did you learn after looking on our dataset?
+
+    Things I learned:
+        
+        1. There are a lot of similar images and comaparing each-pair is very time consuming. I decided to use two methods to reduce the time:
+
+                a. Using Multi-processing
+                b. Calculating image comparison pairs without counting inverses. For eg. to compare [1,2,3,4]
+                ```
+                1 -> 1   2 -> 1   3 -> 1   4 -> 1 
+                1 -> 2   2 -> 2   3 -> 2   4 -> 2
+                1 -> 3   2 -> 3   3 -> 3   4 -> 3
+                1 -> 4   2 -> 4   3 -> 4   4 -> 4
+                ```
+                I created a comparison list as:
+                ```
+                1 -> 2  
+                1 -> 3   2 -> 3  
+                1 -> 4   2 -> 4   3 -> 4 
+                ```
+                This reduced the number of comparison from 1080x1080 = 1166400 to 581581 comparisons
+        2. Some images are corrupted. So they needed to filtered out as well
+        3. Lightning conditions have an impact on comparison score
+
+- How does you program work?
+
+    Described above and both `main.py` and `utils.py` have docstrings to explain. Briefly, it's a 2 step process:
+
+        1. Check for invalid image (parallelized) for all paths
+        2. Generate comparison pairs list
+        3. Generate scores and duplicate frame path list (parallelized)
+
+- What values did you decide to use for input parameters and how did you ﬁnd these values?
+
+    I wasn't able to test my process on the entire dataset because my laptop consistently ran out of memory when I was using multi-processing and without using multi-processing, it was estimating a time of 5+ hours. So, I tested on a subset and chose a value close to the median score for identifying duplicate frames
+
+- What you would suggest to implement to improve data collection of unique cases in future?
+    
+    Introducing a conditional data capture when a new object is detected in frame will be helpful. A combination of Object detection and tracking could help achieve that.
+
+- Any other comments about your solution
+
+    1. I could've improved the way I compare further by removing duplicates after every few comparisons, regenrating comparison list instead of deleting all duplicates at the end.
+
+    2. I wanted to implement exception handling at a few places but couldn't do it in time
 
