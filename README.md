@@ -19,7 +19,14 @@ pip install -r requirements.txt
 ```
 
 ### Docker Run
-Build docker image using `build.sh` and then run the module using `run.sh`
+#### Building from local Dockerfile
+1. Build docker image using `build.sh`  
+2. Run the module using `run.sh`
+3. Optionally you can also run unit tests using `test.sh`
+
+#### Using Docker pull
+
+1. `docker pull skat00sh/kopernikus_image_similarity:v0.0.1`
 
 ## Project Structure
 1. Set data directory and score thresholf in `conf.py`
@@ -42,6 +49,7 @@ Build docker image using `build.sh` and then run the module using `run.sh`
 ├── README.md
 ├── requirements.txt
 ├── run.sh
+├── test.sh
 ```
 
 ## Answers to Questions asked

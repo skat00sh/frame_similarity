@@ -59,5 +59,6 @@ def find_similars_all(data_dir):
 
 
 if __name__ == '__main__':
+    CONFIG = conf.default_config
     find_similars_all(conf.default_config['dataset'])
 
