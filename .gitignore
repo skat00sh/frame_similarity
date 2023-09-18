@@ -1,2 +1,4 @@
 .DS_Store
 .idea/
+data/similar_frame_test/
+src/__pycache__/
