@@ -53,13 +53,13 @@ def find_similars_all(data_dir: str) -> None:
     with multiprocessing.Pool(8) as p:
         image_paths = p.map(check_none_img, image_paths)
     image_paths = [i for i in image_paths if i is not None]
-    cmprPairsList = get_cmpr_pairs_list(image_paths)       
-    cmprPairsCount = len(cmprPairsList)
+    cmpr_pairs_list = get_cmpr_pairs_list(image_paths)       
+    cmpr_pairs_count = len(cmpr_pairs_list)
 
    
     with multiprocessing.Pool(8) as p :
-        print("Total images to compare : {} images\n".format(cmprPairsCount))
-        results = p.map(calculate_similarity_scores, cmprPairsList)
+        print("Total images to compare : {} images\n".format(cmpr_pairs_count))
+        results = p.map(calculate_similarity_scores, cmpr_pairs_list)
 
     scores = [i[0] for i in results if i is not None]
     duplicate_frames  = [i[1] for i in results if i != None and i[1] != []]
