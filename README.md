@@ -19,10 +19,30 @@ pip install -r requirements.txt
 ```
 
 ### Docker Run
-Just run `run.sh`
+Build docker image using `build.sh` and then run the module using `run.sh`
 
 ## Project Structure
-
+1. Set data directory and score thresholf in `conf.py`
+```
+❯ ROOT
+.
+├── data
+│   └── test_set
+│       ├── c10-1623873231583 copy 2.png
+│       ├── c10-1623873231583 copy.png
+│       └── c10-1623873231583.png
+└── src
+    ├── conf.py
+    ├── imaging_interview.py
+    ├── main.py
+    └── utils.py
+├── build.sh
+├── challenge PER.pdf
+├── Dockerfile
+├── README.md
+├── requirements.txt
+├── run.sh
+```
 
 ## Answers to Questions asked
 
