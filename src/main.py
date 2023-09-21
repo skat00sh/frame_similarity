@@ -8,11 +8,12 @@ from pathlib import Path
 import os
 import conf
 from utils import check_none_img, get_cmpr_pairs_list
+from tqdm import tqdm
 
 
 
 
-def calculate_similarity_scores(cmpr_pairs: list) -> tuple:
+def calculate_similarity_scores(prev_img, next_img) -> tuple:
     """Calculates similarity scores and path of duplicate frame to be deleted
 
     Args:
@@ -22,17 +23,24 @@ def calculate_similarity_scores(cmpr_pairs: list) -> tuple:
         tuple: score from frame comparison and path of duplicate frame to be removed
     """
     
+    method_start_time = time.perf_counter()
     SCORE_THRESHOLD = conf.default_config['score_threshold']
     duplicate_frame = []
     
-    prev_frame = preprocess_image_change_detection(cv2.imread(cmpr_pairs[0]))
-    next_frame = preprocess_image_change_detection(cv2.imread(cmpr_pairs[1]))
     
-    if prev_frame.shape == next_frame.shape:
-        results = compare_frames_change_detection(prev_frame, next_frame, min_contour_area=10)
+    
+    if prev_img.shape == next_img.shape:
+        bottleneck_start_time = time.perf_counter()
+
+        results = compare_frames_change_detection(prev_img, next_img, min_contour_area=10)
+        bottleneck_end_time = time.perf_counter()
         if results[0] < SCORE_THRESHOLD: 
-            duplicate_frame = cmpr_pairs[0]
-            
+            duplicate_frame = True
+    
+        method_end_time = time.perf_counter()
+        total_method_time =  method_end_time - method_start_time
+        total_bottleneck_time =  bottleneck_end_time - bottleneck_start_time
+        
         return (results[0],duplicate_frame)
   
 
@@ -48,26 +56,27 @@ def find_similars_all(data_dir: str) -> None:
     print("Finding similar images...\n")
     results = []
     scores = []
+    duplicate_frames = []
     
     image_paths = glob.glob(f"{data_dir}/*")
     with multiprocessing.Pool(8) as p:
-        image_paths = p.map(check_none_img, image_paths)
-    image_paths = [i for i in image_paths if i is not None]
-    cmpr_pairs_list = get_cmpr_pairs_list(image_paths)       
-    cmpr_pairs_count = len(cmpr_pairs_list)
+        images_and_paths = p.map(check_none_img, image_paths)
+    image_paths = [i[1] for i in images_and_paths if i[1] is not None]
+    images = [i[0] for i in images_and_paths if i[0] is not None]
 
-   
-    with multiprocessing.Pool(8) as p :
-        print("Total images to compare : {} images\n".format(cmpr_pairs_count))
-        results = p.map(calculate_similarity_scores, cmpr_pairs_list)
+    cmpr_pairs_tuples = get_cmpr_pairs_list(image_paths)       
+    
+    for i in tqdm(cmpr_pairs_tuples):
+        results = calculate_similarity_scores(images[i[0]], images[i[1]])
+        if results[1] == True:
+            duplicate_frames.append(image_paths[i[0]])
+        
 
-    scores = [i[0] for i in results if i is not None]
-    duplicate_frames  = [i[1] for i in results if i != None and i[1] != []]
-    duplicate_frames = list(set(duplicate_frames))
     
     print(f"\nRemoving duplicate frames from: {data_dir}")
-    for i in duplicate_frames:
-        os.remove(i)
+    # Uncomment only when you want to delete images from the directory
+    # for i in duplicate_frames:
+    #     os.remove(i)
 
 
     print("\nDone searching for similar images!")

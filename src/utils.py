@@ -1,8 +1,9 @@
 import cv2
+from imaging_interview import preprocess_image_change_detection
 
 
 
-def get_cmpr_pairs_list(image_paths: list) -> list(tuple):
+def get_cmpr_pairs_list(image_paths: list):
     """Calculates image comparison pairs. Described in readme
 
     Args:
@@ -11,12 +12,11 @@ def get_cmpr_pairs_list(image_paths: list) -> list(tuple):
     Returns:
         _type_: comparison pairs
     """
-
-    cmpr_pairs_list = []
+    cmpr_tuple = list(tuple())
     for i in range(0, len(image_paths)):
         for j in range(i+1, len(image_paths)):
-            cmpr_pairs_list.append( [image_paths[i], image_paths[j]] )
-    return cmpr_pairs_list
+            cmpr_tuple.append((i,j))
+    return cmpr_tuple
 
 
 def check_none_img(img_path: str) -> str:
@@ -28,5 +28,10 @@ def check_none_img(img_path: str) -> str:
     Returns:
         str:
     """
-    if cv2.imread(img_path) is not None:
-        return img_path
+    img = cv2.imread(img_path)
+    if img is not None:
+        img = cv2.resize(img, (400,400))
+        img = preprocess_image_change_detection(img)
+        return (img , img_path)
+    else:
+        return (None, None)
