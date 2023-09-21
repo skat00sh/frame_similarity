@@ -1,5 +1,5 @@
 # Frame Similarity
-This repo was created as part of recruitment process for Kopernikus Automotive.
+This repo was created as part of recruitment process.
 The program removes duplicate frames from video based on a score thresholding approach.
 
 
