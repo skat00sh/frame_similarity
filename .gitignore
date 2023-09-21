@@ -1,4 +1,9 @@
 .DS_Store
 .idea/
+
 data/similar_frame_test/
+data/dataset
+data/sub_dataset
+data/filtered_sub_dataset
+
 src/__pycache__/
